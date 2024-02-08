@@ -1,0 +1,6 @@
+type GroupMember {
+  id: Int
+  user_id: Int
+  group_id: Int
+  user: User
+}
