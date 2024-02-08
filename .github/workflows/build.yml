@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: [self-hosted, org-runner]
+    runs-on: pr-runner
     permissions: read-all
     steps:
       - uses: actions/checkout@v2
