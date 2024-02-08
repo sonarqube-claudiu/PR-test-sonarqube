@@ -1,0 +1,9 @@
+type FocusPeriod {
+    id: ID
+    title: String
+    data_source_id: Int
+    external_id: String
+    start_date: String
+    end_date: String
+    description: String
+}

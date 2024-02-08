@@ -1,0 +1,7 @@
+type Group {
+    id: ID,
+    name: String,
+    description: String,
+    focusperiod_id: Int,
+    group_members: [GroupMember]
+}

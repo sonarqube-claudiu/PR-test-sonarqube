@@ -1,0 +1,5 @@
+type SprintsPayload {
+    status: Int!
+    message: String!
+    sprints: [Sprint]
+}

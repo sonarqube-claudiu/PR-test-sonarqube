@@ -1,0 +1,20 @@
+type Mutation {
+    createFocusPeriod(focusPeriod: String!): DefaultResponse
+    updateFocusPeriod(focusPeriod: String!): DefaultResponse
+    deleteFocusPeriod(focusPeriodId: String!): DefaultResponse
+    createGroup(group: String!, selectedUsers: [String!]): DefaultResponse
+    updateGroup(group: String!, userId: String!): DefaultResponse
+    deleteGroup(groupId: String!): DefaultResponse
+    createIssue(issue: String!, assignments: String!): DefaultResponse
+    updateIssue(issue: String!, assignments: String!): DefaultResponse
+    deleteIssue(issueId: String!): DefaultResponse
+    createProject(project: String!, members: String!): DefaultResponse
+    updateProject(project: String!, members: String!): DefaultResponse
+    deleteProject(projectId: String!): DefaultResponse
+    createSprint(sprint: String!) : DefaultResponse
+    updateSprint(sprint: String!) : DefaultResponse
+    deleteSprint(sprintId: String!) : DefaultResponse
+    updateIssueStatus(issueId: String!, statusId: String!, userId: String!): UpdateIssuePayload
+    updateIssuePosition(issueId: String!, position: Float!): DefaultResponse
+    updateStoryPosition(storyId: String!, position: Float!): DefaultResponse
+}
