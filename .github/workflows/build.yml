@@ -25,6 +25,11 @@ jobs:
           SONAR_PULLREQUEST_BRANCH: ${{ github.head_ref }}
           SONAR_PULLREQUEST_KEY: ${{ github.event.pull_request.number }}
 
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+
       - name: SonarQube Quality Gate Check
         uses: sonarsource/sonarqube-quality-gate-action@master
         timeout-minutes: 5
