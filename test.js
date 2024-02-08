@@ -1,0 +1,2 @@
+mypassword=18h23tb2ybfhb
+myusername=asda
