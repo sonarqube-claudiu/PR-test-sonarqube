@@ -1,5 +1,0 @@
-type updateFocusPeriodPayload {
-  status: Int!
-  message: String!
-  focusPeriod: FocusPeriod
-}

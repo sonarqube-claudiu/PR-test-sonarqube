@@ -1,4 +1,0 @@
-type StoryPayload {
-    storyId: ID
-    story: Story
-}

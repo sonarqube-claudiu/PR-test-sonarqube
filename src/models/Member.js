@@ -1,39 +1,28 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../utils/db');
-const User = require('./User');
-const Project = require('./Project');
-const Role = require('./Role');
+class MemberClass {
+  constructor(id = null, userId = null, projectId = null) {
+    this._id = id;
+    this._userId = userId;
+    this._projectId = projectId;
+  }
 
-class Member extends Model {}
+  get id() {
+    return this._id;
+  }
+  set id(value) {
+    this._id = value;
+  }
 
-Member.init({
-    id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: User,
-            key: 'id'
-        }
-    },
-    project_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: Project,
-            key: 'id'
-        }
-    },
-}, {
-    sequelize,
-    modelName: 'Member',
-    tableName: 'member',
-    timestamps: false
-});
+  get userId() {
+    return this._userId;
+  }
+  set userId(value) {
+    this._userId = value;
+  }
 
-module.exports = Member;
+  get projectId() {
+    return this._projectId;
+  }
+  set projectId(value) {
+    this._projectId = value;
+  }
+}

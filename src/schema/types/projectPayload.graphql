@@ -1,4 +1,0 @@
-type ProjectPayload {
-    projectId: String
-    project: Project
-}

@@ -1,5 +1,0 @@
-type GroupPayload {
-    status: String
-    message: String
-    groups: [Group]
-}

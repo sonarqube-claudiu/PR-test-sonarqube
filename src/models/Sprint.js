@@ -1,58 +1,11 @@
-// src/models/Sprint.js
-
-const { Model, DataTypes } = require("sequelize");
-const sequelize = require("../utils/db");
-const DataSource = require("./DataSource");
-const Project = require("./Project");
-
-class Sprint extends Model {}
-
-Sprint.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    data_source_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: DataSource,
-        key: "id",
-      },
-    },
-    external_id: {
-      type: DataTypes.STRING(255),
-    },
-
-    project_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Project,
-        key: "id",
-      },
-    },
-    name: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
-    start_date: {
-      type: DataTypes.DATE,
-    },
-    end_date: {
-      type: DataTypes.DATE,
-    },
-    description: {
-      type: DataTypes.TEXT,
-    },
-  },
-  {
-    sequelize,
-    modelName: "Sprint",
-    tableName: "sprint",
-    timestamps: false,
-  }
-);
-
-module.exports = Sprint;
+export class Sprint {
+    constructor(sprint) {
+        this.id = sprint.id || null;
+        this.dataSourceId = sprint.data_source_id || null;
+        this.externalId = sprint.external_id || null;
+        this.name = sprint.name || null;
+        this.startDate = sprint.start_date || null;
+        this.endDate = sprint.end_date || null;
+        this.description = sprint.description || null;
+    }
+}

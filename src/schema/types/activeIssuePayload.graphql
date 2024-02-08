@@ -1,5 +1,0 @@
-type ActiveIssuePayload {
-  status: Int!
-  message: String!
-  issue: Issue
-}

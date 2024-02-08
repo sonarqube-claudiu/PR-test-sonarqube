@@ -1,162 +1,122 @@
-// src/models/Issue.js
+import { createIssue } from 'features/issuesThunk';
+import {
+  INPUT_COMMENT_MAX_LEN,
+  INPUT_DESC_MAX_LEN,
+  INPUT_NOTES_MAX_LEN,
+  INPUT_SUBJECT_MAX_LEN,
+  noWhiteSpaceRegex
+} from './Constants';
+import { ISSUE_STATUS } from './enums/IssueStatuses';
+import { ISSUE_TRACKER } from './enums/IssueTrackers';
 
-const { Model, DataTypes } = require("sequelize");
-const sequelize = require("../utils/db");
-const DataSource = require("./DataSource");
-const Project = require("./Project");
-const Sprint = require("./Sprint");
-const Status = require("./Status");
-const IssueType = require("./IssueType");
+export class Issue {
+  constructor(issue) {
+    this.id = issue.id || null;
+    this.dataSourceId = issue.data_source_id || null;
+    this.externalId = issue.external_id || null;
+    this.projectId = issue.project_id || null;
+    this.sprintId = issue.sprint_id || null;
+    this.statusId = issue.status_id || null;
+    this.subject = issue.subject || null;
+    this.issueTypeId = issue.issue_type_id || null;
+    this.description = issue.description || null;
+    this.parentId = issue.parent_id || null;
+    this.metadata = issue.metadata || null;
+    this.position = issue.position || null;
+    this.spentTime = issue.spent_time || null;
+    this.estimatedTime = issue.estimated_time || null;
+    this.done_ratio = issue.done_ratio || null;
+    this.createdOn = issue.createdOn || null;
+    this.updatedOn = issue.updatedOn || null;
+  }
 
-class Issue extends Model {}
+  save(callback) {
+    callback();
+  }
 
-Issue.init({
-  id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  data_source_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: DataSource,
-      key: "id"
-    },
-    validate: {
-      isInt: { msg: "Data source ID must be an integer" }
-    }
-  },
-  external_id: {
-    type: DataTypes.STRING(255),
-    validate: {
-      len: {
-        args: [0, 255],
-        msg: "External ID must be 255 characters or less"
-      }
-    }
-  },
-  project_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false, // Assuming it's required
-    references: {
-      model: Project,
-      key: "id"
-    },
-    validate: {
-      notNull: { msg: "Project ID is required" },
-      isInt: { msg: "Project ID must be an integer" }
-    }
-  },
-  sprint_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: Sprint,
-      key: "id"
-    },
-    validate: {
-      isInt: { msg: "Sprint ID must be an integer" },
-    }
-  },
-  status_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false, // Assuming it's required
-    references: {
-      model: Status,
-      key: "id"
-    },
-    validate: {
-      notNull: { msg: "Status ID is required" },
-      isInt: { msg: "Status ID must be an integer" }
-    }
-  },
-  parent_id: {
-    type: DataTypes.INTEGER,
-    validate: {
-      isInt: { msg: "Parent ID must be an integer" },
-    }
-  },
-  subject: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
-    validate: {
-      notNull: { msg: "Subject is required" },
-      notEmpty: { msg: "Subject must not be empty" }
-    }
-  },
-  metadata: {
-    type: DataTypes.JSON,
-    validate: {
-      isObject(value) {
-        if (value && typeof value !== 'object') {
-          throw new Error("Metadata must be a valid JSON object");
-        }
-      }
-    }
-  },
-  description: {
-    type: DataTypes.TEXT,
-  },
-  created_on: {
-    type: DataTypes.DATE
-  },
-  updated_on: {
-    type: DataTypes.DATE
-  },
-  issue_type_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false, // Assuming it's required
-    references: {
-      model: IssueType,
-      key: "id"
-    },
-    validate: {
-      notNull: { msg: "Issue type ID is required" },
-      isInt: { msg: "Issue type ID must be an integer" }
-    }
-  },
-  position: {
-    type: DataTypes.DOUBLE,
-    defaultValue: 0,
-    validate: {
-      isNumeric: { msg: "Position must be a number" }
-    }
-  },
-  spent_time: {
-    type: DataTypes.DOUBLE,
-    defaultValue: 0,
-    validate: {
-      isNumeric: { msg: "Spent time must be a number" }
-    }
-  },
-  estimated_time: {
-    type: DataTypes.DOUBLE,
-    validate: {
-      isNumeric: { msg: "Estimated time must be a number" },
-    }
-  },
-  done_ratio: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-    validate: {
-      isInt: { msg: "Done ratio must be an integer" },
-      min: {
-        args: [0],
-        msg: "Done ratio cannot be less than 0"
-      },
-      max: {
-        args: [100],
-        msg: "Done ratio cannot be greater than 100"
-      }
-    }
-  },
-}, {
-  sequelize,
-  modelName: "Issue",
-  tableName: "issue",
-  timestamps: true,
-  // updatedAt: 'updated_on',
-  // createdAt: 'created_on'
-});
+  isValid() {
+    return (
+      Issue.isSubjectValid(this.subject) &&
+      Issue.isDescriptionValid(this.description)
+    );
+  }
 
-module.exports = Issue;
+  static notUserStory(issue) {
+    return +issue?.issue_type_id !== +ISSUE_TRACKER.USER_STORY;
+  }
+
+  static isNew(issue) {
+    return +issue?.status_id === +ISSUE_STATUS.NEW && Issue.notUserStory(issue);
+  }
+
+  static isInProgress(issue) {
+    return (
+      +issue?.status_id === +ISSUE_STATUS.IN_PROGRESS &&
+      Issue.notUserStory(issue)
+    );
+  }
+
+  static isOnHold(issue) {
+    return (
+      +issue?.status_id === +ISSUE_STATUS.ON_HOLD && Issue.notUserStory(issue)
+    );
+  }
+
+  static isResolved(issue) {
+    return (
+      +issue?.status_id === +ISSUE_STATUS.RESOLVED && Issue.notUserStory(issue)
+    );
+  }
+
+  static belongsToProject(issue, project) {
+    return +issue?.project_id === +project?.id && Issue.notUserStory(issue);
+  }
+
+  static belongsToStory(issue, story) {
+    return +issue?.parent_id === +story?.id && Issue.notUserStory(issue);
+  }
+
+  static isSubjectValid(subject) {
+    if (
+      subject?.length === 0 ||
+      subject?.length > INPUT_SUBJECT_MAX_LEN ||
+      !noWhiteSpaceRegex.test(subject)
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  static isDescriptionValid(description) {
+    if (
+      description?.length != 0 &&
+      (!noWhiteSpaceRegex.test(description) ||
+        description?.length > INPUT_DESC_MAX_LEN)
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  static isCommentValid(comment) {
+    if (
+      comment?.length === 0 ||
+      comment?.length > INPUT_COMMENT_MAX_LEN ||
+      !noWhiteSpaceRegex.test(comment)
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  static isNoteValid(note) {
+    if (
+      note?.length === 0 ||
+      note?.length > INPUT_NOTES_MAX_LEN ||
+      !noWhiteSpaceRegex.test(note)
+    ) {
+      return false;
+    }
+    return true;
+  }
+}

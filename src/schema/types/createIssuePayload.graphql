@@ -1,4 +1,0 @@
-type CreateIssuePayload {
-    status: String
-    issue: Issue
-}

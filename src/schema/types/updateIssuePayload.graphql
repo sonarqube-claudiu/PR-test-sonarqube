@@ -1,6 +1,0 @@
-type UpdateIssuePayload {
-  status: Int!
-  message: String!
-  update: Boolean!
-  issue: Issue
-}

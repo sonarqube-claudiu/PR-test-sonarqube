@@ -1,5 +1,0 @@
-type Assignment {
-    issue_id: Int
-    user_id: Int
-    user: User
-}

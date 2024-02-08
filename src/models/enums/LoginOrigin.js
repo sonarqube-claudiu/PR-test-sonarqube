@@ -1,0 +1,4 @@
+export const LOGIN_ORIGIN = {
+    REDMINE: "REDMINE",
+    MICROSOFT: "MICROSOFT",
+}
